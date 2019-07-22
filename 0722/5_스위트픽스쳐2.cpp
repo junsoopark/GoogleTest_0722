@@ -1,33 +1,12 @@
 #include <string>
 
 // 스위트 픽스쳐
+// : 신선한 픽스쳐의 전략이 아닌, 공유 픽스쳐의 전략을 사용하도록 변경된다. 
+// 이전의 테스트가 픽스쳐를 망가뜨릴 경우, 이후의 테스트의 결과의 신뢰성이 깨질 수 있다.
+// => 이제는 각각의 테스트는 더 이상 독립적이지 않습니다.
+// : 공유 픽스쳐 전략에서 변덕스러운 테스트가 발생한다면, 테스트 케이스를 분리해서 문제를 찾을 수 있다.
 
 #include <unistd.h>
-
-// 가정
-//  : Connect / Disconnect의 동작이 느리다.
-// => 픽스쳐를 설치하고 해체하는 작업이 느린경우...
-// => 테스트 함수를 추가할 때마다 전체적인 테스트가 느려지는 문제가 발생합니다.
-
-// Slow Test 문제
-//  : 테스트가 너무 느려서, 개발자들이 SUT가 변경되어도 매번 테스트를 수행하지 않는다.
-//  : 테스트를 수행하는 개발자의 생산성을 떨어뜨린다.
-
-// Global Fixture SetUp
-
-// DatabaseTest::SetUp() - Suite Fixture Setup
-// DatabaseTest testcase = new DatabaseTest;
-// testcase->SetUp()
-// testcase->LoginTest();
-// testcase->TearDown();
-
-// DatabaseTest testcase = new DatabaseTest;
-// testcase->SetUp()
-// testcase->LogoutTest();
-// testcase->TearDown();
-// DatabaseTest::TearDown(); - Suite Fixture Teardown
-//
-// Global Fixture TearDown
 
 class Database {
 public:
@@ -48,29 +27,30 @@ protected:
 	static std::string test_id;
 	static std::string test_password;
 
-	Database* database;
+	static Database* database;
 	virtual void SetUp() override {
-		database = new Database;
-		database->Connect();
 	}
 
 	virtual void TearDown() override {
-		database->Disconnect();
-		delete database;
 	}
 
 	// Suite Fixture Setup / Teardown
 	static void SetUpTestCase() {
 		printf("SetUpTestCase\n");
+		database = new Database;
+		database->Connect();
 	}
 
 	static void TearDownTestCase() {
 		printf("TearDownTestCase\n");
+		database->Disconnect();
+		delete database;
 	}
 };
 
 std::string DatabaseTest::test_id = "test_id";
 std::string DatabaseTest::test_password = "test_password";
+Database* DatabaseTest::database = nullptr;
 
 TEST_F(DatabaseTest, LoginTest) {
 	database->Login(test_id, test_password);
