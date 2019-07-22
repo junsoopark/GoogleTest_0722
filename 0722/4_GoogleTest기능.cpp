@@ -62,6 +62,39 @@ TEST(GoogleTestSample, Test3) {
 	// ASSERT_EQ(a, b);
 }
 
+// 4. 예외 테스트
+//  : 예외 처리 코드도 테스트에 포함시켜 검증해야 합니다.
+void foo(const std::string& name) {
+	if (name.empty()) {
+		throw std::invalid_argument("name is empty");
+	}
+}
+
+// 테스트의 시나리오
+//  : foo함수에 빈 문자열을 전달하였을 때, invalid_argument 예외가 발생하는지 여부를 검증하고 싶다.
+TEST(GoogleTestSample, Test4) {
+	std::string empty_name = "";
+
+	try {
+		foo(empty_name);
+		FAIL() << "기대한 예외가 발생하지 않았음..";
+	} catch (std::invalid_argument& e) {
+		SUCCEED();
+	} catch (...) {
+		FAIL() << "다른 종류의 예외가 발생하였음..";
+	}
+}
+
+TEST(GoogleTestSample, Test4_Good) {
+	std::string empty_name = "";
+
+	ASSERT_THROW(foo(empty_name), std::invalid_argument);
+	ASSERT_ANY_THROW(foo(empty_name)); // 어떤 예외든 상관없는 버전.
+}
+
+
+
+
 
 
 
