@@ -25,6 +25,10 @@ public:
               
 // $  g++ 2_3A.cpp -I. -lgtest -L. -pthread
 // Calculator -> CalculatorTest (TestCaseName) 
+// 문제점 
+// 1) 테스트 코드 안에서는 절대 제어 구문을 사용하면 안됩니다.
+//    (조건문, 반복문, 예외 처리) 같은 구문을 사용하면 안됩니다.
+//    => 단위 테스트는 유지보수의 비용이 작아야 합니다.
 TEST(CalculatorTest, Test1) {
 	// Arrange
 	Calculator* calc = new Calculator;
@@ -35,10 +39,31 @@ TEST(CalculatorTest, Test1) {
 	calc->Enter(2);
 
 	// Assert
+	// : 단위 테스트 프레임워크는 기대값과 실제값을 비교하는 다양한 함수를
+	//   이미 제공하고 있습니다.
+#if 0
 	if (calc->Display() != 4) {
 		FAIL() << "2 + 2 == 4";
 	}
+#endif
+	// 인자의 순서에 신경써야 합니다.
+	// ASSERT_EQ(expected, actual);
+	// ASSERT_EQ(calc->Display(), 4) << "2 + 2 == 4";
+	ASSERT_EQ(4, calc->Display()) << "2 + 2 == 4";
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
