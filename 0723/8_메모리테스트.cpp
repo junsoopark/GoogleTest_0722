@@ -7,24 +7,46 @@
 
 class Image {
 public:
+	static int allocCount;
+
 	void* operator new(size_t size) {
 		printf("객체 할당\n");
+		++allocCount;
 		return malloc(size);
 	}
 
 	void operator delete(void* p, size_t) {
 		printf("객체 해지\n");
+		--allocCount;
 		free(p);
 	}
 };
 
+int Image::allocCount = 0;
+
+class ImageTest : public ::testing::Test {
+protected:
+	int allocCount;
+	virtual void SetUp() override {
+		allocCount = Image::allocCount;
+	}
+
+	virtual void TearDown() override {
+		int diff = Image::allocCount - allocCount;
+		EXPECT_EQ(0, diff) << diff << " Objects leaked";
+	}
+};
+
 void foo() {
-	Image* img = new Image;
+	Image* img1 = new Image;
+	Image* img2 = new Image;
+	Image* img3 = new Image;
+
 	printf(".....\n");
-	delete img;
+	delete img1;
 }
 
-TEST(MemoryLeakTest, imageTest) {
+TEST_F(ImageTest, imageTest) {
 	foo();
 }
 
