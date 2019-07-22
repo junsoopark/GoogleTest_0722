@@ -29,6 +29,10 @@ public:
 // 1) 테스트 코드 안에서는 절대 제어 구문을 사용하면 안됩니다.
 //    (조건문, 반복문, 예외 처리) 같은 구문을 사용하면 안됩니다.
 //    => 단위 테스트는 유지보수의 비용이 작아야 합니다.
+// 2) 현재 테스트의 이름으로는 테스트가 어떤 시나리오로 동작하는지 알 수
+//    없다.
+//    => 이름 규칙을 잘 정하는 것이 매우 중요합니다.
+//    => ex) 테스트대상함수_테스트시나리오_기대값
 TEST(CalculatorTest, Test1) {
 	// Arrange
 	Calculator* calc = new Calculator;
@@ -52,7 +56,28 @@ TEST(CalculatorTest, Test1) {
 	ASSERT_EQ(4, calc->Display()) << "2 + 2 == 4";
 }
 
+// TDD     => BDD
+// Arrange -> Given
+// Act     -> When
+// Assert  -> Then
 
+TEST(CalculatorTest, Display_2Plus2_Equals4) {
+	// Arrange
+	Calculator* calc = new Calculator;
+
+	// Act
+	calc->Enter(2);
+	calc->PressPlus();
+	calc->Enter(2);
+
+	// Assert
+	ASSERT_EQ(4, calc->Display()) << "2 + 2 == 4";
+}
+
+// 테스트 코드 품질
+// 1) 가독성
+// 2) 유지보수성
+// 3) 신뢰성
 
 
 
