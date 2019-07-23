@@ -4,8 +4,8 @@
 // 검증할 수 있다.
 // -> C++은 클래스의 메모리 할당 연산을 재정의하는 것이 가능합니다.
 //  : tcmalloc, jemalloc
-
 class Image {
+#ifdef LEAK_TEST
 public:
 	static int allocCount;
 
@@ -20,20 +20,27 @@ public:
 		--allocCount;
 		free(p);
 	}
+#endif
 };
 
+#ifdef LEAK_TEST
 int Image::allocCount = 0;
+#endif
 
 class ImageTest : public ::testing::Test {
 protected:
 	int allocCount;
 	virtual void SetUp() override {
+#ifdef LEAK_TEST
 		allocCount = Image::allocCount;
+#endif
 	}
 
 	virtual void TearDown() override {
+#ifdef LEAK_TEST
 		int diff = Image::allocCount - allocCount;
 		EXPECT_EQ(0, diff) << diff << " Objects leaked";
+#endif
 	}
 };
 
@@ -49,11 +56,3 @@ void foo() {
 TEST_F(ImageTest, imageTest) {
 	foo();
 }
-
-
-
-
-
-
-
-
