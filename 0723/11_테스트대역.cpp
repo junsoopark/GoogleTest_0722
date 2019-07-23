@@ -17,7 +17,7 @@
 
 class FileSystem {
 public:
-	bool IsValid(const std::string& filename) { return true; }
+	bool IsValid(const std::string& filename) { return false; }
 };
 
 class Logger {
