@@ -42,21 +42,34 @@ public:
 //      Java: jMock, EasyMock, [Mockito -> Spock]
 //      C++:  Google Mock
 
+// 1. include
+#include <gmock/gmock.h>
+
+// 2. Google Mock을 사용하기 위해서 작성해야 하는 코드 작업
+// => googlemock/scripts/generator/gmock_gen.py 을 이용하면 자동으로 생성할 수 있습니다.
+class DLogTargetMock : public DLogTarget {
+public:
+	// void Write(DLogLevel level, const std::string& message)
+	// MOCK_METHOD{인자의 개수}(함수의 이름, 함수의 타입)
+	
+	MOCK_METHOD2(Write, void (DLogLevel level, const std::string& message));
+};
+
 class DLogTest : public ::testing::Test {
 };
 
-#if 0
 TEST_F(DLogTest, WriteTest) {
 	DLog log;
-	SpyTarget spy1, spy2;
+	DLogTargetMock mock1, mock2;
 	DLogLevel level = INFO;
 	std::string message = "test_info_message";
-	log.AddTarget(&spy1);
-	log.AddTarget(&spy2);
+	log.AddTarget(&mock1);
+	log.AddTarget(&mock2);
 
+	// Assert - 행위 기반 검증 시나리오
+	EXPECT_CALL(mock1, Write(level, message));
+	EXPECT_CALL(mock2, Write(level, message));
+
+	// Act
 	log.Write(level, message);
-
-	EXPECT_TRUE(spy1.IsReceived(level, message));
-	EXPECT_TRUE(spy2.IsReceived(level, message));
 }
-#endif
