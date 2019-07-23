@@ -22,7 +22,7 @@ public:
 	
 	void Write(DLogLevel level, const std::string& message) {
 		for (DLogTarget* e : targets) {
-			e->Write(level, message);
+			// e->Write(level, message);
 		}
 	}
 };
@@ -73,3 +73,9 @@ TEST_F(DLogTest, WriteTest) {
 	// Act
 	log.Write(level, message);
 }
+
+// 호출 여부
+// 호출 횟수
+// 호출 순서
+//     +
+//    Stub
