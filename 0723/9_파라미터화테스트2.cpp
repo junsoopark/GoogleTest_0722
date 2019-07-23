@@ -12,18 +12,32 @@ bool IsPrime(int value) {
 
 #include <gtest/gtest.h>
 
-// 파라미터화 테스트가 없다면
 // int data[] = { 11, 13, 17, 23, 41 };
-TEST(ParamTest, PrimeTest) {
-	EXPECT_TRUE(IsPrime(11));
-	EXPECT_TRUE(IsPrime(13));
-	EXPECT_TRUE(IsPrime(17));
-	EXPECT_TRUE(IsPrime(23));
-	EXPECT_TRUE(IsPrime(42));
+
+// 1. 파라미터화 테스트를 위한 테스트 케이스 클래스를 만들어야 합니다.
+// class ParamTest : public ::testing::Test {};
+class ParamTest : public ::testing::TestWithParam<int> {
+};
+
+// 2. Data Set 정의해야 합니다.
+int data[] = { 11, 13, 17, 23, 41 };
+INSTANTIATE_TEST_CASE_P(primeValues, ParamTest, ::testing::ValuesIn(data)); 
+
+// 3. 이제는 해당 데이터를 이용하는 다양한 테스트를 만들면 됩니다.
+// TEST / TEST_F / TEST_P
+TEST_P(ParamTest, isPrime) {
+	int input = GetParam();  // 값을 얻어오는 함수입니다.
+
+	EXPECT_TRUE(IsPrime(input));
 }
 
-TEST(ParamTest, PrimeTest2) {
-	int data[] = { 11, 13, 17, 23, 42 };
-	for (int i = 0; i < 5; ++i)
-		EXPECT_TRUE(IsPrime(data[i]));
+TEST_P(ParamTest, isPrime2) {
+	int input = GetParam();  // 값을 얻어오는 함수입니다.
+
+	EXPECT_TRUE(IsPrime(input));
 }
+
+
+
+
+
