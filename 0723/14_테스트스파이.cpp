@@ -60,21 +60,15 @@ class DLogTest : public ::testing::Test {
 };
 
 TEST_F(DLogTest, WriteTest) {
-	
+	DLog log;
+	SpyTarget spy1, spy2;
+	DLogLevel level = INFO;
+	std::string message = "test_info_message";
+	log.AddTarget(&spy1);
+	log.AddTarget(&spy2);
+
+	log.Write(level, message);
+
+	EXPECT_TRUE(spy1.IsReceived(level, message));
+	EXPECT_TRUE(spy2.IsReceived(level, message));
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
