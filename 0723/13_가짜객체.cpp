@@ -1,5 +1,4 @@
 
-// 13_Fake Object
 
 #include <string>
 
@@ -43,16 +42,38 @@ public:
 	}
 };
 
+#include <map>
 #include <gtest/gtest.h>
 
+// 13_Fake Object
+// 1) 의존하는 협력객체가 아직 준비되지 않아서, SUT를 검증할 수 없다.
+// 2) 의존하는 협력객체를 사용하기 어려워서, SUT를 검증할 수 없다.
 
+class FakeDatabase : public IDatabase {
+	std::map<std::string, User*> data;
+public:
+	void Save(const std::string& name, int age) {
+		User* user = new User(name, age);
+		data.put[name] = user;
+	}
 
+	User* Load(const std::string& name) {
+		return data[name];
+	}
+};
 
+class UserManagerTest : public ::testing::Test {
+};
 
+TEST_F(UserManagerTest, LoadTest) {
+	FakeDatabase fake;
+	UserManager manager(&fake);
+	std::string name = "test_name";
+	int age = 42;
+	User user(name, age);
 
+	manager.Save(name, age);
+	User* actual = manager.Load(name);
 
-
-
-
-
-
+	ASSERT_EQ(user, *actual);
+}
