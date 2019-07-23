@@ -86,6 +86,17 @@ TEST_F(UserManagerTest, LoadTest) {
 	ASSERT_EQ(user, *actual);
 }
 
+// Docker
+//  A -> python 2
+//  B -> python 3
+//  C -> Node 6
+//  D -> Node 8
+//
+//  [A + Env] : Image -> Container
+
+
+
+
 
 
 
