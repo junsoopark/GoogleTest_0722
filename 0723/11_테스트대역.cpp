@@ -38,18 +38,26 @@ public:
 	}
 };
 
+//-----------------------------------------------------------
+#include <gtest/gtest.h>
 
+class LoggerTest : public ::testing::Test {
+protected:
+};
 
+TEST_F(LoggerTest, IsValidFilename_NameShorterThan5Chars_ReturnsFalse) {
+	Logger logger;
+	std::string filename = "bad.log";
 
+	ASSERT_FALSE(logger.IsValidFilename(filename)) 
+		<< "파일명이 다섯글자 미만일 때";
+}
 
+TEST_F(LoggerTest, IsValidFilename_NameLongerThan5Chars_ReturnsTrue) {
+	Logger logger;
+	std::string filename = "valid_name.log";
+	
+	bool actual = logger.IsValidFilename(filename);
 
-
-
-
-
-
-
-
-
-
-
+	ASSERT_TRUE(actual) << "파일명이 다섯글자 이상일 때";
+}
