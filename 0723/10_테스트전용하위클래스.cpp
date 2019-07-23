@@ -6,6 +6,8 @@ public:
 	virtual void Start() { printf("Engine Start...\n"); }
 	virtual ~Engine() {}
 };
+// 부모의 동작(메소드)을 하위 클래스를 통해 변경하기 위해서는 반드시,
+// 부모의 인터페이스가 virtual 함수이어야 한다.
 
 class Car {
 	Engine* engine;

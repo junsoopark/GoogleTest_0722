@@ -1,3 +1,5 @@
+// 한계: 부모의 필드가 private 인 경우에는 사용할 수 없다.
+
 // 10_테스트전용하위클래스2.cpp
 class User {
 public:
