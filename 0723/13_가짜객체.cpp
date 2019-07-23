@@ -54,7 +54,7 @@ class FakeDatabase : public IDatabase {
 public:
 	void Save(const std::string& name, int age) {
 		User* user = new User(name, age);
-		data.put[name] = user;
+		data[name] = user;
 	}
 
 	User* Load(const std::string& name) {
@@ -65,6 +65,12 @@ public:
 class UserManagerTest : public ::testing::Test {
 };
 
+// 연산자 재정의 함수!!
+bool operator==(const User& lhs, const User& rhs) {
+	return lhs.getName() == rhs.getName() &&
+		lhs.getAge() == rhs.getAge();
+}
+
 TEST_F(UserManagerTest, LoadTest) {
 	FakeDatabase fake;
 	UserManager manager(&fake);
@@ -72,8 +78,17 @@ TEST_F(UserManagerTest, LoadTest) {
 	int age = 42;
 	User user(name, age);
 
-	manager.Save(name, age);
+	manager.Save(&user);
 	User* actual = manager.Load(name);
 
+	// 사용자 정의 객체에 대해서, ASSERT_EQ/NE... 사용하기 위해서는
+	// 연산자 재정의 함수가 필요합니다.
 	ASSERT_EQ(user, *actual);
 }
+
+
+
+
+
+
+
